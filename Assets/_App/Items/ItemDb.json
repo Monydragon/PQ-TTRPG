@@ -1,0 +1,164 @@
+{
+  "$type": "System.Collections.Generic.List`1[[Item, Assembly-CSharp]], mscorlib",
+  "$values": [
+    {
+      "$type": "Equipment, Assembly-CSharp",
+      "Stats": {
+        "$type": "Stats, Assembly-CSharp",
+        "Health": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MeleeAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 1,
+          "CurrentValue": 1
+        },
+        "MeleeDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "RangeAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "RangeDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MagicAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MagicDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "CritChance": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 10,
+          "CurrentValue": 10
+        }
+      },
+      "Slot": 0,
+      "Type": 0,
+      "ItemName": "Bronze Sword",
+      "Description": "A simple bronze Sword",
+      "Cost": 5,
+      "name": "Sword",
+      "hideFlags": 0
+    },
+    {
+      "$type": "Equipment, Assembly-CSharp",
+      "Stats": {
+        "$type": "Stats, Assembly-CSharp",
+        "Health": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MeleeAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MeleeDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "RangeAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "RangeDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MagicAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 3,
+          "CurrentValue": 3
+        },
+        "MagicDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "CritChance": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 10,
+          "CurrentValue": 10
+        }
+      },
+      "Slot": 0,
+      "Type": 2,
+      "ItemName": "Magic Staff",
+      "Description": "A Magical Staff",
+      "Cost": 10,
+      "name": "Staff",
+      "hideFlags": 0
+    },
+    {
+      "$type": "Equipment, Assembly-CSharp",
+      "Stats": {
+        "$type": "Stats, Assembly-CSharp",
+        "Health": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MeleeAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MeleeDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 1,
+          "CurrentValue": 1
+        },
+        "RangeAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "RangeDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 1,
+          "CurrentValue": 1
+        },
+        "MagicAttack": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        },
+        "MagicDefense": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 2,
+          "CurrentValue": 2
+        },
+        "CritChance": {
+          "$type": "Stat, Assembly-CSharp",
+          "MaxValue": 0,
+          "CurrentValue": 0
+        }
+      },
+      "Slot": 3,
+      "Type": 1,
+      "ItemName": "Leather Armor",
+      "Description": "Armor made of leather",
+      "Cost": 10,
+      "name": "Leather Armor",
+      "hideFlags": 0
+    }
+  ]
+}
