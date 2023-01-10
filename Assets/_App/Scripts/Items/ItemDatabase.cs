@@ -95,10 +95,12 @@ public class ItemDatabase : MonoBehaviour
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
             var json = webClient.DownloadString(url);
             items = JsonConvert.DeserializeObject<List<Item>>(json, jsonSettings);
+            PopupDisplayUI.instance.ShowPopup("Loaded Item Database from Server!", PopupDisplayUI.PopupPosition.Middle, () => { });
         }
         catch (WebException ex)
         {
-            Console.WriteLine("An error occurred while downloading the JSON file: " + ex.Message);
+            Debug.LogError("An error occurred while downloading the JSON file: " + ex.Message);
+            PopupDisplayUI.instance.ShowPopup("Failed to Load Item Database from Server!", PopupDisplayUI.PopupPosition.Middle, () => { });
         }
     }
     
