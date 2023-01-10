@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539a1ac4a2d05074db666f74583aaf62, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: 
+  itemName: Bronze Sword
+  description: A simple bronze Sword
+  cost: 5
+  stats:
+    health:
+      maxValue: 0
+      currentValue: 0
+    meleeAttack:
+      maxValue: 1
+      currentValue: 1
+    meleeDefense:
+      maxValue: 0
+      currentValue: 0
+    rangeAttack:
+      maxValue: 0
+      currentValue: 0
+    rangeDefense:
+      maxValue: 0
+      currentValue: 0
+    magicAttack:
+      maxValue: 0
+      currentValue: 0
+    magicDefense:
+      maxValue: 0
+      currentValue: 0
+    critChance:
+      maxValue: 10
+      currentValue: 10
+  slot: 0
+  type: 0
