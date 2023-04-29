@@ -52,6 +52,7 @@ public class PopupDisplayUI : MonoBehaviour
         if(confirmAction != null)
         {
             confirmButton.onClick.AddListener(confirmAction);
+            confirmButton.onClick.AddListener(HidePopup);
             confirmButton.gameObject.SetActive(true);
         }
         else
@@ -61,11 +62,17 @@ public class PopupDisplayUI : MonoBehaviour
         if (cancelAction != null)
         {
             cancelButton.onClick.AddListener(cancelAction);
+            cancelButton.onClick.AddListener(HidePopup);
             cancelButton.gameObject.SetActive(true);
         }
         else
         {
             cancelButton.gameObject.SetActive(false);
         }
+    }
+
+    public void HidePopup()
+    {
+        popupUi.SetActive(false);
     }
 }
