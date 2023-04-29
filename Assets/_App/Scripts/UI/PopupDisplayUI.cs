@@ -74,5 +74,7 @@ public class PopupDisplayUI : MonoBehaviour
     public void HidePopup()
     {
         popupUi.SetActive(false);
+        confirmButton.onClick.RemoveAllListeners();
+        cancelButton.onClick.RemoveAllListeners();
     }
 }

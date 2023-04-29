@@ -5,8 +5,9 @@ using TMPro;
 public class CharacterItemButton : MonoBehaviour
 {
     [SerializeField] TMP_Text itemNameText, itemDescriptionText, itemAmountText, itemHealthText, itemMeleeAttackText, itemMeleeDefenseText, itemRangeAttackText, itemRangeDefenseText, itemMagicAttackText, itemMagicDefenseText, itemCritChanceText, itemEquipmentSlotText;
-    [SerializeField] bool isAddingItem, isRemovingItem, isUsingItem, isSelectEquipment;
+    [SerializeField] bool isSelectEquipment;
     [SerializeField] InventorySlot selectedItemSlot;
+    
     public TMP_Text ItemNameText { get => itemNameText; set => itemNameText = value; }
     public TMP_Text ItemDescriptionText { get => itemDescriptionText; set => itemDescriptionText = value; }
     public TMP_Text ItemAmountText { get => itemAmountText; set => itemAmountText = value; }
@@ -19,9 +20,6 @@ public class CharacterItemButton : MonoBehaviour
     public TMP_Text ItemMagicDefenseText { get => itemMagicDefenseText; set => itemMagicDefenseText = value; }
     public TMP_Text ItemCritChanceText { get => itemCritChanceText; set => itemCritChanceText = value; }
     public TMP_Text ItemEquipmentSlotText { get => itemEquipmentSlotText; set => itemEquipmentSlotText = value; }
-    public bool IsAddingItem { get => isAddingItem; set => isAddingItem = value; }
-    public bool IsRemovingItem { get => isRemovingItem; set => isRemovingItem = value; }
-    public bool IsUsingItem { get => isUsingItem; set => isUsingItem = value; }
     public bool IsSelectEquipment { get => isSelectEquipment; set => isSelectEquipment = value; }
     public InventorySlot SelectedItemSlot { get => selectedItemSlot; set => selectedItemSlot = value; }
 
@@ -46,68 +44,65 @@ public class CharacterItemButton : MonoBehaviour
             }
         }
     }
-    public void Execute()
+    
+    public void AddItem()
     {
-        if(selectedItemSlot != null)
+            PopupDisplayUI.instance.ShowPopup($"Added {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
+                () =>
+                {
+                    PlayerManager.instance.playerCharacter.Inventory.AddItem(selectedItemSlot.Item, 1);
+                });
+    }
+
+    public void RemoveItem()
+    {
+            PopupDisplayUI.instance.ShowPopup($"Removed {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
+                () =>
+                {
+                    PlayerManager.instance.playerCharacter.Inventory.RemoveItem(selectedItemSlot.Item, 1);
+                });
+    }
+
+    public void UseItem()
+    {
+
+        Equipment equipment = null;
+        if (selectedItemSlot.Item.GetType() == typeof(Equipment))
         {
-            if (isAddingItem)
+            equipment = (Equipment)selectedItemSlot.Item;
+            if (PlayerManager.instance.playerCharacter.Equipment[(int)equipment.Slot] != null)
             {
-                PopupDisplayUI.instance.ShowPopup($"Added {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
+                PopupDisplayUI.instance.ShowPopup($"Unequipped {PlayerManager.instance.playerCharacter.Equipment[(int)equipment.Slot]?.ItemName}", PopupDisplayUI.PopupPosition.Middle,
                     () =>
                     {
-                        PlayerManager.instance.playerCharacter.Inventory.AddItem(selectedItemSlot.Item, 1);
                     });
             }
-            if (IsRemovingItem)
+            else
             {
-                PopupDisplayUI.instance.ShowPopup($"Removed {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
+                PopupDisplayUI.instance.ShowPopup($"Equipped {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
                     () =>
                     {
-                        PlayerManager.instance.playerCharacter.Inventory.RemoveItem(selectedItemSlot.Item, 1);
                     });
-            }
-            if (isUsingItem)
-            {
-                Equipment equipment = null;
-                if (selectedItemSlot.Item.GetType() == typeof(Equipment))
-                {
-                    equipment = (Equipment)selectedItemSlot.Item;
-                    if (PlayerManager.instance.playerCharacter.Equipment[(int)equipment.Slot] != null)
-                    {
-                        PopupDisplayUI.instance.ShowPopup($"Unequipped {PlayerManager.instance.playerCharacter.Equipment[(int)equipment.Slot]?.ItemName}", PopupDisplayUI.PopupPosition.Middle,
-                            () =>
-                            {
-                            });
-                    }
-                    else
-                    {
-                        PopupDisplayUI.instance.ShowPopup($"Equipped {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
-                            () =>
-                            {
-                            });
-                    }
-                }
-                else
-                {
-                    PopupDisplayUI.instance.ShowPopup($"Used {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
-                        () =>
-                        {
-                        });
-                }
-                
-                selectedItemSlot.Item.Use(PlayerManager.instance.playerCharacter);
-
-                if (isSelectEquipment && equipment != null)
-                {
-                    PlayerCharacterMenuController.instance.SelectEquipment((int)equipment.Slot);
-                }
-                else
-                {
-                    PlayerCharacterMenuController.instance.UseItem();
-                }
-
             }
         }
+        else
+        {
+            PopupDisplayUI.instance.ShowPopup($"Used {selectedItemSlot.Item.ItemName}", PopupDisplayUI.PopupPosition.Middle,
+                () =>
+                {
+
+                });
+        }
         
+        selectedItemSlot.Item.Use(PlayerManager.instance.playerCharacter);
+        if (isSelectEquipment && equipment != null)
+        {
+            PlayerCharacterMenuController.instance.SelectEquipment((int)equipment.Slot);
+        }
+        else
+        {
+            PlayerCharacterMenuController.instance.UseItem();
+        }
+
     }
 }

@@ -103,7 +103,7 @@ public class MainMenuUIController : MonoBehaviour
             var button = Instantiate(itemDatabaseButtonPrefab, loadItemDatabaseContent.transform);
             var loadButton = button.GetComponent<ItemDatabaseLoadButton>();
             loadButton.Database = ItemDatabase.instance;
-            loadButton.Database.Load(Application.persistentDataPath, filename);
+            loadButton.Database.Load(path, filename);
             loadButton.FileName = filename;
             loadButton.Count = loadButton.Database.Items.Count;
         }

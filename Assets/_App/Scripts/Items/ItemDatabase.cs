@@ -47,6 +47,10 @@ public class ItemDatabase : MonoBehaviour
             {
                 path = Path.Combine(path, fileName);
             }
+            
+            // #if UNITY_ANDROID
+            // path = "file://" + path;
+            // #endif
 
             File.WriteAllText(path, json);
             return true;
@@ -77,6 +81,9 @@ public class ItemDatabase : MonoBehaviour
         try
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            // #if UNITY_ANDROID
+            // path = "file://" + path;
+            // #endif
             var json = File.ReadAllText(path);
             items = JsonConvert.DeserializeObject<List<Item>>(json, jsonSettings);
             return true;

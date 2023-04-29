@@ -1499,7 +1499,7 @@ GameObject:
   - component: {fileID: 8233269475285043439}
   - component: {fileID: -4871551669912611371}
   m_Layer: 5
-  m_Name: UI Item Button
+  m_Name: UI Add Item Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1621,7 +1621,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: -4871551669912611371}
         m_TargetAssemblyTypeName: CharacterItemButton, Assembly-CSharp
-        m_MethodName: Execute
+        m_MethodName: AddItem
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1655,9 +1655,6 @@ MonoBehaviour:
   itemMagicDefenseText: {fileID: 556038572605205989}
   itemCritChanceText: {fileID: 4833483787939574316}
   itemEquipmentSlotText: {fileID: 972804655570154134}
-  isAddingItem: 0
-  isRemovingItem: 0
-  isUsingItem: 0
   isSelectEquipment: 0
   selectedItemSlot:
     item: {fileID: 0}

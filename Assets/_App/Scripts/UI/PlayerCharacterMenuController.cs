@@ -5,13 +5,17 @@ using TMPro;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class PlayerCharacterMenuController : MonoBehaviour
 {
     public static PlayerCharacterMenuController instance;
 
     [SerializeField]
-    private GameObject itemButtonPrefab, loadCharacterButtonPrefab, characerItemsContent, loadCharactersContent;
+    private GameObject addItemButtonPrefab, removeItemButtonPrefab, useItemButtonPrefab;
+
+    [SerializeField]
+    private GameObject loadCharacterButtonPrefab, characerItemsContent, loadCharactersContent;
 
     [SerializeField]
     private TMP_Text playerNameText, characterNameText,combatLevelText,healthText, meleeLevelText,rangeLevelText,magicLevelText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText,weaponText,shieldText,headText,bodyText,legsText,feetText;
@@ -25,7 +29,9 @@ public class PlayerCharacterMenuController : MonoBehaviour
     [SerializeField]
     private PlayerCharacter player;
 
-    public GameObject ItemButtonPrefab { get => itemButtonPrefab; set => itemButtonPrefab = value; }
+    public GameObject AddItemButtonPrefab { get => addItemButtonPrefab; set => addItemButtonPrefab = value; }
+    public GameObject RemoveItemButtonPrefab { get => removeItemButtonPrefab; set => removeItemButtonPrefab = value; }
+    public GameObject UseItemButtonPrefab { get => useItemButtonPrefab; set => useItemButtonPrefab = value; }
     public GameObject LoadCharacterButtonPrefab { get => loadCharacterButtonPrefab; set => loadCharacterButtonPrefab = value; }
     public GameObject CharacerItemsContent { get => characerItemsContent; set => characerItemsContent = value; }
     public GameObject LoadCharactersContent { get => loadCharactersContent; set => loadCharactersContent = value; }
@@ -118,11 +124,10 @@ public class PlayerCharacterMenuController : MonoBehaviour
         ClearItemsContent();
         for (int i = 0; i < ItemDatabase.instance.Items.Count; i++)
         {
-            var button = Instantiate(itemButtonPrefab, characerItemsContent.transform);
+            var button = Instantiate(addItemButtonPrefab, characerItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             if(itemBtnScript != null)
             {
-                itemBtnScript.IsAddingItem = true;
                 itemBtnScript.SelectedItemSlot = new InventorySlot { Item = ItemDatabase.instance.Items[i], Amount = 1 };
             }
         }
@@ -133,12 +138,11 @@ public class PlayerCharacterMenuController : MonoBehaviour
         ClearItemsContent();
         for (int i = 0; i < player.Inventory.Items.Count; i++)
         {
-            var button = Instantiate(itemButtonPrefab, characerItemsContent.transform);
+            var button = Instantiate(removeItemButtonPrefab, characerItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             var itemSlot = player.Inventory.Items[i];
             if (itemBtnScript != null)
             {
-                itemBtnScript.IsRemovingItem = true;
                 itemBtnScript.SelectedItemSlot = itemSlot;
             }
         }
@@ -149,12 +153,11 @@ public class PlayerCharacterMenuController : MonoBehaviour
         ClearItemsContent();
         for (int i = 0; i < player.Inventory.Items.Count; i++)
         {
-            var button = Instantiate(itemButtonPrefab, characerItemsContent.transform);
+            var button = Instantiate(useItemButtonPrefab, characerItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             var itemSlot = player.Inventory.Items[i];
             if (itemBtnScript != null)
             {
-                itemBtnScript.IsUsingItem = true;
                 itemBtnScript.SelectedItemSlot = itemSlot;
             }
         }
@@ -164,7 +167,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
     {
         PopupDisplayUI.instance.ShowPopup($"Are you sure you want to remove all items from {player.CharacterName}'s Inventory?", PopupDisplayUI.PopupPosition.Middle,
             () => {
-                for (int i = 0; i < player.Inventory.Items.Count; i++)
+                for (int i = player.Inventory.Items.Count - 1; i >= 0; i--)
                 {
                     player.Inventory.Items.RemoveAt(i);
                 }
@@ -181,12 +184,11 @@ public class PlayerCharacterMenuController : MonoBehaviour
             {
                 if(equipment.Slot == (EquipmentSlot)slot)
                 {
-                    var button = Instantiate(itemButtonPrefab, characerItemsContent.transform);
+                    var button = Instantiate(useItemButtonPrefab, characerItemsContent.transform);
                     var itemBtnScript = button.GetComponent<CharacterItemButton>();
                     var itemSlot = player.Inventory.Items[i];
                     if (itemBtnScript != null)
                     {
-                        itemBtnScript.IsUsingItem = true;
                         itemBtnScript.IsSelectEquipment = true;
                         itemBtnScript.SelectedItemSlot = itemSlot;
                     }
