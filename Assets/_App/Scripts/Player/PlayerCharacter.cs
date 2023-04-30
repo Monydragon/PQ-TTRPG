@@ -16,10 +16,13 @@ public class PlayerCharacter
     private Stats stats = new();
 
     [SerializeField]
-    Equipment[] equipment = new Equipment[Enum.GetValues(typeof(EquipmentSlot)).Length];
+    private Equipment[] equipment = new Equipment[Enum.GetValues(typeof(EquipmentSlot)).Length];
 
     [SerializeField]
-    Inventory inventory = new ();
+    private Inventory inventory = new ();
+    
+    [SerializeField]
+    private List<Note> notes = new ();
 
     public string PlayerName { get => playerName; set => playerName = value; }
     
@@ -32,6 +35,7 @@ public class PlayerCharacter
     public Equipment[] Equipment { get => equipment; set => equipment = value; }
 
     public Inventory Inventory { get => inventory; set => inventory = value; }
+    public List<Note> Notes { get => notes; set => notes = value; }
 
     public PlayerCharacter()
     {

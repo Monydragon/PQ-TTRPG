@@ -12,7 +12,7 @@ public class MainMenuUIController : MonoBehaviour
     public static MainMenuUIController instance;
 
     [SerializeField]
-    private GameObject loadCharacterButtonPrefab, loadCharactersContent, itemDatabaseButtonPrefab, loadItemDatabaseContent;
+    private GameObject loadCharacterButtonPrefab, loadCharactersContent, itemDatabaseButtonPrefab, loadItemDatabaseContent, modifyItemDatabaseContent, itemDatabaseItemButtonPrefab;
 
     [SerializeField]
     private TMP_InputField playerCharacterNameInput, playerNameInput, itemDatabaseFileNameInput;
@@ -21,6 +21,8 @@ public class MainMenuUIController : MonoBehaviour
     public GameObject LoadCharactersContent { get => loadCharactersContent; set => loadCharactersContent = value; }
     public GameObject ItemDatabaseButtonPrefab { get => itemDatabaseButtonPrefab; set => itemDatabaseButtonPrefab = value; }
     public GameObject LoadItemDatabaseContent { get => loadItemDatabaseContent; set => loadItemDatabaseContent = value; }
+    public GameObject ModifyItemDatabaseContent { get => modifyItemDatabaseContent; set => modifyItemDatabaseContent = value; }
+    public GameObject ItemDatabaseItemButtonPrefab { get => itemDatabaseItemButtonPrefab; set => itemDatabaseItemButtonPrefab = value; }
     public TMP_InputField PlayerCharacterNameInput { get => playerCharacterNameInput; set => playerCharacterNameInput = value; }
     public TMP_InputField PlayerNameInput { get => playerNameInput; set => playerNameInput = value; }
     public TMP_InputField ItemDatabaseFileNameInput { get => itemDatabaseFileNameInput; set => itemDatabaseFileNameInput = value; }
@@ -53,6 +55,15 @@ public class MainMenuUIController : MonoBehaviour
         for (int i = 0; i < loadItemDatabaseContent.transform.childCount; i++)
         {
             Destroy(loadItemDatabaseContent.transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void ClearModifyItemDatabaseContent()
+    {
+        if (modifyItemDatabaseContent.transform.childCount <= 0) return;
+        for (int i = 0; i < modifyItemDatabaseContent.transform.childCount; i++)
+        {
+            Destroy(modifyItemDatabaseContent.transform.GetChild(i).gameObject);
         }
     }
 
@@ -119,6 +130,17 @@ public class MainMenuUIController : MonoBehaviour
                 ItemDatabase.instance.Save();
             });
 
+        }
+    }
+
+    public void ModifyItemDatabase()
+    {
+        ClearModifyItemDatabaseContent();
+        for (int i = 0; i < ItemDatabase.instance.Items.Count; i++)
+        {
+            var btn = Instantiate(itemDatabaseItemButtonPrefab, modifyItemDatabaseContent.transform);
+            var itemBtn = btn.GetComponent<ItemDatabaseUIButton>();
+            itemBtn.Item = ItemDatabase.instance.Items[i];
         }
     }
 }

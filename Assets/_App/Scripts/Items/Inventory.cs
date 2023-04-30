@@ -5,9 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class Inventory
 {
+    [SerializeField] private int gold;
+    
     [SerializeField]
     private List<InventorySlot> items = new();
 
+    public int Gold { get => gold; set => gold = value; }
+    
     public List<InventorySlot> Items { get => items; set => items = value; }
 
     public bool HasItems { get => items.Count > 0; }

@@ -15,13 +15,19 @@ public class PlayerCharacterMenuController : MonoBehaviour
     private GameObject addItemButtonPrefab, removeItemButtonPrefab, useItemButtonPrefab;
 
     [SerializeField]
-    private GameObject loadCharacterButtonPrefab, characerItemsContent, loadCharactersContent;
+    private GameObject loadCharacterButtonPrefab;
 
     [SerializeField]
-    private TMP_Text playerNameText, characterNameText,combatLevelText,healthText, meleeLevelText,rangeLevelText,magicLevelText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText,weaponText,shieldText,headText,bodyText,legsText,feetText;
+    private GameObject characterItemsContent;
 
     [SerializeField]
-    private TMP_InputField levelAmountInput, healthAmountInput, saveFileNameInput;
+    private GameObject loadCharactersContent, characterNoteContent, characterNotePrefab;
+
+    [SerializeField]
+    private TMP_Text playerNameText, characterNameText,combatLevelText,healthText, meleeLevelText,rangeLevelText,magicLevelText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText,weaponText,shieldText,headText,bodyText,legsText,feetText, goldText;
+
+    [SerializeField]
+    private TMP_InputField levelAmountInput, goldAmountInput, healthAmountInput, saveFileNameInput, diceSideAmountInput, diceAmountInput, noteInput;
 
     [SerializeField]
     private TMP_Dropdown levelTypeDropdown;
@@ -33,8 +39,10 @@ public class PlayerCharacterMenuController : MonoBehaviour
     public GameObject RemoveItemButtonPrefab { get => removeItemButtonPrefab; set => removeItemButtonPrefab = value; }
     public GameObject UseItemButtonPrefab { get => useItemButtonPrefab; set => useItemButtonPrefab = value; }
     public GameObject LoadCharacterButtonPrefab { get => loadCharacterButtonPrefab; set => loadCharacterButtonPrefab = value; }
-    public GameObject CharacerItemsContent { get => characerItemsContent; set => characerItemsContent = value; }
+    public GameObject CharacerItemsContent { get => characterItemsContent; set => characterItemsContent = value; }
     public GameObject LoadCharactersContent { get => loadCharactersContent; set => loadCharactersContent = value; }
+    public GameObject CharacterNoteContent { get => characterNoteContent; set => characterNoteContent = value; }
+    public GameObject CharacterNotePrefab { get => characterNotePrefab; set => characterNotePrefab = value; }
     public TMP_Text PlayerNameText { get => playerNameText; set => playerNameText = value; }
     public TMP_Text CharacterNameText { get => characterNameText; set => characterNameText = value; }
     public TMP_Text CombatLevelText { get => combatLevelText; set => combatLevelText = value; }
@@ -55,9 +63,14 @@ public class PlayerCharacterMenuController : MonoBehaviour
     public TMP_Text BodyText { get => bodyText; set => bodyText = value; }
     public TMP_Text LegsText { get => legsText; set => legsText = value; }
     public TMP_Text FeetText { get => feetText; set => feetText = value; }
+    public TMP_Text GoldText { get => goldText; set => goldText = value; }
     public TMP_InputField LevelAmountInput { get => levelAmountInput; set => levelAmountInput = value; }
     public TMP_InputField LoseHealthAmountInput { get => healthAmountInput; set => healthAmountInput = value; }
+    public TMP_InputField GoldAmountInput { get => goldAmountInput; set => goldAmountInput = value; }
     public TMP_InputField SaveFileNameInput { get => saveFileNameInput; set => saveFileNameInput = value; }
+    public TMP_InputField DiceSideAmountInput { get => diceSideAmountInput; set => diceSideAmountInput = value; }
+    public TMP_InputField DiceAmountInput { get => diceAmountInput; set => diceAmountInput = value; }
+    public TMP_InputField NoteInput { get => noteInput; set => noteInput = value; }
     public TMP_Dropdown LevelTypeDropdown { get => levelTypeDropdown; set => levelTypeDropdown = value; }
     public PlayerCharacter Player { get => player; set => player = value; }
 
@@ -91,6 +104,8 @@ public class PlayerCharacterMenuController : MonoBehaviour
         magicDefenseText.text = $"Magic Defense: {player.Stats.MagicDefense.MaxValue}";
         critChanceText.text = $"Crit Chance: {player.Stats.CritChance.MaxValue}";
 
+        goldText.text = $"Gold: {player.Inventory.Gold}";
+
         weaponText.text = (player.Equipment[0] != null) ? $"Weapon: {player.Equipment[0].ItemName}" : "Weapon: None";
         shieldText.text = (player.Equipment[1] != null) ? $"Shield: {player.Equipment[1].ItemName}" : "Shield: None";
         headText.text = (player.Equipment[2] != null) ? $"Head: {player.Equipment[2].ItemName}" : "Head: None";
@@ -101,11 +116,11 @@ public class PlayerCharacterMenuController : MonoBehaviour
 
     public void ClearItemsContent()
     {
-        if (characerItemsContent.transform.childCount <= 0) return;
+        if (characterItemsContent.transform.childCount <= 0) return;
 
-        for (int i = 0; i < characerItemsContent.transform.childCount; i++)
+        for (int i = characterItemsContent.transform.childCount - 1; i >= 0; i--)
         {
-            Destroy(characerItemsContent.transform.GetChild(i).gameObject);
+            Destroy(characterItemsContent.transform.GetChild(i).gameObject);
         }
     }
 
@@ -113,9 +128,19 @@ public class PlayerCharacterMenuController : MonoBehaviour
     {
         if (loadCharactersContent.transform.childCount <= 0) return;
 
-        for (int i = 0; i < loadCharactersContent.transform.childCount; i++)
+        for (int i = loadCharactersContent.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(loadCharactersContent.transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void ClearCharacterNoteContent()
+    {
+        if (characterNoteContent.transform.childCount <= 0) return;
+
+        for (int i = characterNoteContent.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(characterNoteContent.transform.GetChild(i).gameObject);
         }
     }
 
@@ -124,7 +149,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
         ClearItemsContent();
         for (int i = 0; i < ItemDatabase.instance.Items.Count; i++)
         {
-            var button = Instantiate(addItemButtonPrefab, characerItemsContent.transform);
+            var button = Instantiate(addItemButtonPrefab, characterItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             if(itemBtnScript != null)
             {
@@ -138,7 +163,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
         ClearItemsContent();
         for (int i = 0; i < player.Inventory.Items.Count; i++)
         {
-            var button = Instantiate(removeItemButtonPrefab, characerItemsContent.transform);
+            var button = Instantiate(removeItemButtonPrefab, characterItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             var itemSlot = player.Inventory.Items[i];
             if (itemBtnScript != null)
@@ -153,7 +178,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
         ClearItemsContent();
         for (int i = 0; i < player.Inventory.Items.Count; i++)
         {
-            var button = Instantiate(useItemButtonPrefab, characerItemsContent.transform);
+            var button = Instantiate(useItemButtonPrefab, characterItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             var itemSlot = player.Inventory.Items[i];
             if (itemBtnScript != null)
@@ -184,7 +209,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
             {
                 if(equipment.Slot == (EquipmentSlot)slot)
                 {
-                    var button = Instantiate(useItemButtonPrefab, characerItemsContent.transform);
+                    var button = Instantiate(useItemButtonPrefab, characterItemsContent.transform);
                     var itemBtnScript = button.GetComponent<CharacterItemButton>();
                     var itemSlot = player.Inventory.Items[i];
                     if (itemBtnScript != null)
@@ -217,6 +242,38 @@ public class PlayerCharacterMenuController : MonoBehaviour
                 player.Levels.Magic.GainExp(val);
                 PopupDisplayUI.instance.ShowPopup($"Gain Magic Exp by {val}", PopupDisplayUI.PopupPosition.Middle, () => { });
                 break;
+        }
+    }
+    
+    public void GainGold()
+    {
+        int val = int.Parse(goldAmountInput.text);
+        
+        player.Inventory.Gold += val;
+        PopupDisplayUI.instance.ShowPopup($"Gained {val} Gold", PopupDisplayUI.PopupPosition.Middle, () => { });
+    }
+    
+    public void SetGold()
+    {
+        int val = int.Parse(goldAmountInput.text);
+        
+        player.Inventory.Gold = val;
+        PopupDisplayUI.instance.ShowPopup($"Set Gold to {val}", PopupDisplayUI.PopupPosition.Middle, () => { });
+    }
+    
+    public void LoseGold()
+    {
+        int val = int.Parse(goldAmountInput.text);
+
+        if (player.Inventory.Gold - val > 0)
+        {
+            player.Inventory.Gold -= val;
+            PopupDisplayUI.instance.ShowPopup($"Lose {val} Gold", PopupDisplayUI.PopupPosition.Middle, () => { });
+        }
+        else
+        {
+            player.Inventory.Gold = 0;
+            PopupDisplayUI.instance.ShowPopup($"Lose all Gold", PopupDisplayUI.PopupPosition.Middle, () => { });
         }
     }
 
@@ -393,6 +450,46 @@ public class PlayerCharacterMenuController : MonoBehaviour
         }
     }
 
+    public void RollDice()
+    {
+        int.TryParse(diceSideAmountInput.text, out int sides);
+        int.TryParse(diceAmountInput.text, out int amount) ;
+
+        if (sides <= 0)
+        {
+            PopupDisplayUI.instance.ShowPopup($"Please enter a valid sides number.", PopupDisplayUI.PopupPosition.Middle, (
+                () =>
+                {
+                
+                }));
+        }
+        else if (amount <= 0)
+        {
+            PopupDisplayUI.instance.ShowPopup($"Please enter a valid amount number.", PopupDisplayUI.PopupPosition.Middle, (
+                () =>
+                {
+                
+                }));
+        }
+        else
+        {
+            var total = 0;
+            for (int i = 0; i < amount; i++)
+            {
+                total += Random.Range(1, sides + 1);
+            }
+        
+            PopupDisplayUI.instance.ShowPopup($"Rolled {amount} X {sides} sided dice with a total of {total}", PopupDisplayUI.PopupPosition.Middle, (
+                () =>
+                {
+                
+                }));
+        }
+        
+
+
+    }
+
     public void SaveCharacter()
     {
         PopupDisplayUI.instance.ShowPopup($"Saved Character {player.CharacterName}", PopupDisplayUI.PopupPosition.Middle, 
@@ -436,5 +533,41 @@ public class PlayerCharacterMenuController : MonoBehaviour
         {
             saveFileNameInput.text = player.CharacterName;
         }
+    }
+
+    public void LoadNotes()
+    {
+        ClearCharacterNoteContent();
+
+        for (int i = 0; i < PlayerManager.instance.playerCharacter.Notes.Count; i++)
+        {
+            var noteBtn = Instantiate(characterNotePrefab, characterNoteContent.transform);
+            var uiBtn = noteBtn.GetComponent<NoteUIButton>();
+            uiBtn.Note = PlayerManager.instance.playerCharacter.Notes[i];
+            uiBtn.NoteText.text = PlayerManager.instance.playerCharacter.Notes[i].NoteText;
+        }
+    }
+
+    public void AddNote()
+    {
+        var note = new Note(noteInput.text);
+        PlayerManager.instance.playerCharacter.Notes.Add(note);
+        var noteBtn = Instantiate(characterNotePrefab, characterNoteContent.transform);
+        var uiBtn = noteBtn.GetComponent<NoteUIButton>();
+        uiBtn.Note = note;
+        uiBtn.NoteText.text = note.NoteText;
+    }
+
+    public void RemoveAllNotes()
+    {
+        PopupDisplayUI.instance.ShowPopup("Are you sure you want to remove all Notes?", PopupDisplayUI.PopupPosition.Middle,
+            () =>
+            {
+                PlayerManager.instance.playerCharacter.Notes.Clear();
+                ClearCharacterNoteContent();
+            }, () =>
+            {
+                
+            });
     }
 }
