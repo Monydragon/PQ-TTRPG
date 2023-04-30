@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine.Serialization;
 
 public class ItemDatabase : MonoBehaviour
@@ -13,9 +14,11 @@ public class ItemDatabase : MonoBehaviour
     public static ItemDatabase instance;
 
     [SerializeField] private List<ItemDatabaseContainer> itemDatabases;
+    [SerializeField] private ItemDatabaseContainer serverDatabase = new();
     [SerializeField] private ItemDatabaseContainer currentDatabase = new ();
     
     public List<ItemDatabaseContainer> ItemDatabases { get => itemDatabases; set => itemDatabases = value;}
+    public ItemDatabaseContainer ServerDatabase { get => serverDatabase; set => serverDatabase = value;}
     
     public ItemDatabaseContainer CurrentDatabase { get => currentDatabase; set => currentDatabase = value;}
     private void Awake()
@@ -40,8 +43,15 @@ public class ItemDatabase : MonoBehaviour
                 currentDatabase = itemDatabases.OrderByDescending(x => x.LastUpdatedUtcTime).Select(x => x).FirstOrDefault();
                 if (currentDatabase == null)
                 {
-                    currentDatabase = new ItemDatabaseContainer();
-                    Save();
+                    if (serverDatabase != null)
+                    {
+                        LoadServerItems();
+                    }
+                    else
+                    {
+                        currentDatabase = new ItemDatabaseContainer();
+                        Save();
+                    }
                 }
             }
             catch (Exception e)
@@ -55,6 +65,26 @@ public class ItemDatabase : MonoBehaviour
 
         }
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void LoadServerItems()
+    {
+        currentDatabase = serverDatabase;
+        currentDatabase.Items.Clear();
+        var items = Resources.LoadAll("Items", typeof(Item)).Cast<Item>().ToArray();
+        for (var i = 0; i < items.Length; i++)
+        {
+            var t = items[i];
+            currentDatabase.Items.Add(t);
+        }
+        Save();
+
+#if UNITY_EDITOR
+        var path = Path.Combine("Assets", "_App", "Resources", "Items");
+        var filename = currentDatabase.SaveFileName;
+        File.WriteAllText(Path.Combine(path,filename),JsonConvert.SerializeObject(currentDatabase, Formatting.Indented));
+        AssetDatabase.Refresh();
+#endif
     }
 
     public bool Save(string path = "", string fileName = "")
