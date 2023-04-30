@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 public class CharacterItemButton : MonoBehaviour
 {
-    [SerializeField] TMP_Text itemNameText, itemDescriptionText, itemAmountText, itemHealthText, itemMeleeAttackText, itemMeleeDefenseText, itemRangeAttackText, itemRangeDefenseText, itemMagicAttackText, itemMagicDefenseText, itemCritChanceText, itemEquipmentSlotText;
+    [SerializeField] TMP_Text itemNameText, itemDescriptionText, itemAmountText, itemHealthText, itemMeleeAttackText, itemMeleeDefenseText, itemRangeAttackText, itemRangeDefenseText, itemMagicAttackText, itemMagicDefenseText, itemCritChanceText, itemEquipmentSlotText, itemEquipmentTypeText;
     [SerializeField] bool isSelectEquipment;
     [SerializeField] InventorySlot selectedItemSlot;
     
@@ -20,6 +20,7 @@ public class CharacterItemButton : MonoBehaviour
     public TMP_Text ItemMagicDefenseText { get => itemMagicDefenseText; set => itemMagicDefenseText = value; }
     public TMP_Text ItemCritChanceText { get => itemCritChanceText; set => itemCritChanceText = value; }
     public TMP_Text ItemEquipmentSlotText { get => itemEquipmentSlotText; set => itemEquipmentSlotText = value; }
+    public TMP_Text ItemEquipmentTypeText { get => itemEquipmentTypeText; set => itemEquipmentTypeText = value; }
     public bool IsSelectEquipment { get => isSelectEquipment; set => isSelectEquipment = value; }
     public InventorySlot SelectedItemSlot { get => selectedItemSlot; set => selectedItemSlot = value; }
 
@@ -30,10 +31,12 @@ public class CharacterItemButton : MonoBehaviour
             itemNameText.text = selectedItemSlot.Item.ItemName;
             itemDescriptionText.text = selectedItemSlot.Item.Description;
             ItemAmountText.text = $"Amount: {selectedItemSlot.Amount}";
-            if(selectedItemSlot.Item.GetType() == typeof(Equipment))
+            if(selectedItemSlot.Item is Equipment equipment)
             {
-                var equipment = (Equipment)selectedItemSlot.Item;
+                // var equipment = (Equipment)selectedItemSlot.Item;
                 itemEquipmentSlotText.text = $"Slot: {equipment.Slot}";
+                itemEquipmentTypeText.text = $"Type: {equipment.Type}";
+                itemHealthText.text = $"Health: {equipment.Stats.Health.MaxValue}";
                 ItemMeleeAttackText.text = $"Melee Attack: {equipment.Stats.MeleeAttack.MaxValue}";
                 itemMeleeDefenseText.text = $"Melee Defense: {equipment.Stats.MeleeDefense.MaxValue}";
                 ItemRangeAttackText.text = $"Range Attack: {equipment.Stats.RangeAttack.MaxValue}";

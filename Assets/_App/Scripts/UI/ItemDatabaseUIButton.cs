@@ -8,10 +8,10 @@ using UnityEngine.Serialization;
 public class ItemDatabaseUIButton : MonoBehaviour
 {
 
-    public Action<Item> OnItemEdit;
+    public static Action<Item> OnItemEdit;
     
     [SerializeField]
-    private TMP_Text itemNameText, itemDescriptionText,itemSlotsText,healthText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText;
+    private TMP_Text itemNameText, itemDescriptionText,equipmentSlotsText,equipmentTypeText,healthText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText;
 
     [SerializeField]
     private TMP_Text itemCostText;
@@ -30,10 +30,16 @@ public class ItemDatabaseUIButton : MonoBehaviour
         set => itemDescriptionText = value;
     }
 
-    public TMP_Text ItemSlotsText
+    public TMP_Text EquipmentSlotsText
     {
-        get => itemSlotsText;
-        set => itemSlotsText = value;
+        get => equipmentSlotsText;
+        set => equipmentSlotsText = value;
+    }
+    
+    public TMP_Text EquipmentTypeText
+    {
+        get => equipmentTypeText;
+        set => equipmentTypeText = value;
     }
 
     public TMP_Text HealthText
@@ -106,7 +112,8 @@ public class ItemDatabaseUIButton : MonoBehaviour
             itemCostText.text = $"Cost: {item.Cost}";
             if (equipment != null)
             {
-                itemSlotsText.text = $"Slot: {equipment.Slot.ToString()}";
+                equipmentSlotsText.text = $"Slot: {equipment.Slot.ToString()}";
+                equipmentTypeText.text = $"Type: {equipment.Type.ToString()}";
                 healthText.text = $"Health: {equipment.Stats.Health.MaxValue}";
                 meleeAttackText.text = $"Melee Attack: {equipment.Stats.MeleeAttack.MaxValue}";
                 meleeDefenseText.text = $"Melee Defense: {equipment.Stats.MeleeDefense.MaxValue}";
@@ -118,7 +125,17 @@ public class ItemDatabaseUIButton : MonoBehaviour
             }
             else
             {
-                itemSlotsText.text = "Slot: None";
+                equipmentSlotsText.gameObject.SetActive(false);
+                equipmentTypeText.gameObject.SetActive(false);
+                healthText.gameObject.SetActive(false);
+                meleeAttackText.gameObject.SetActive(false);
+                meleeDefenseText.gameObject.SetActive(false);
+                rangeAttackText.gameObject.SetActive(false);
+                rangeDefenseText.gameObject.SetActive(false);
+                magicAttackText.gameObject.SetActive(false);
+                magicDefenseText.gameObject.SetActive(false);
+                critChanceText.gameObject.SetActive(false);
+                
             }
             
         }
@@ -131,7 +148,7 @@ public class ItemDatabaseUIButton : MonoBehaviour
             PopupDisplayUI.instance.ShowPopup($"Confirm Delete Item: {item.ItemName}",PopupDisplayUI.PopupPosition.Middle,
                 () =>
                 {
-                    ItemDatabase.instance.Items.Remove(item);
+                    ItemDatabase.instance.CurrentDatabase.Items.Remove(item);
                     Destroy(gameObject);
                 }, () =>
                 {

@@ -4,7 +4,7 @@
 public class Equipment : Item
 {
     [SerializeField]
-    private Stats stats;
+    private Stats stats = new();
 
     [SerializeField]
     EquipmentSlot slot;
@@ -48,8 +48,6 @@ public class Equipment : Item
             character.Stats.CritChance.MaxValue += stats.CritChance.MaxValue;
             character.Inventory.RemoveItem(this);
         }
-
-        
     }
 
 }

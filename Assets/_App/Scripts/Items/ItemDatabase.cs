@@ -3,20 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
+using UnityEngine.Serialization;
 
 public class ItemDatabase : MonoBehaviour
 {
     public static ItemDatabase instance;
-    [SerializeField]
-    private string saveFileName = "ItemDatabase.json";
-    [SerializeField]
-    private List<Item> items = new ();
 
-    public string SaveFileName { get => saveFileName; set => saveFileName = value; }
-    public List<Item> Items { get => items; set => items = value; }
-
+    [SerializeField] private List<ItemDatabaseContainer> itemDatabases;
+    [SerializeField] private ItemDatabaseContainer currentDatabase = new ();
+    
+    public List<ItemDatabaseContainer> ItemDatabases { get => itemDatabases; set => itemDatabases = value;}
+    
+    public ItemDatabaseContainer CurrentDatabase { get => currentDatabase; set => currentDatabase = value;}
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -26,22 +27,48 @@ public class ItemDatabase : MonoBehaviour
         else
         {
             instance = this;
+            try
+            {
+                var files = Directory.GetFiles(Application.persistentDataPath, "*.json");
+                for (int i = 0; i < files.Length; i++)
+                {
+                    var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                    var itemDb = JsonConvert.DeserializeObject<ItemDatabaseContainer>(File.ReadAllText(files[i]),jsonSettings);
+                    itemDatabases.Add(itemDb);
+                }
+
+                currentDatabase = itemDatabases.OrderByDescending(x => x.LastUpdatedUtcTime).Select(x => x).FirstOrDefault();
+                if (currentDatabase == null)
+                {
+                    currentDatabase = new ItemDatabaseContainer();
+                    Save();
+                }
+            }
+            catch (Exception e)
+            {
+                PopupDisplayUI.instance.ShowPopup("Error Loading Database", PopupDisplayUI.PopupPosition.Middle, () =>
+                {
+                    Debug.Log(e.Message);
+                });
+            }
+
+
         }
         DontDestroyOnLoad(gameObject);
     }
 
     public bool Save(string path = "", string fileName = "")
     {
-        if(items.Count <= 0) { return false; }
+        if(currentDatabase.Items.Count <= 0) { return false; }
 
         try
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
-            var json = JsonConvert.SerializeObject(items, Formatting.Indented,jsonSettings);
+            var json = JsonConvert.SerializeObject(currentDatabase, Formatting.Indented,jsonSettings);
 
             if (string.IsNullOrEmpty(path) && string.IsNullOrEmpty(fileName))
             {
-                path = Path.Combine(Application.persistentDataPath, saveFileName);
+                path = Path.Combine(Application.persistentDataPath, currentDatabase.SaveFileName);
             }
             else
             {
@@ -60,9 +87,14 @@ public class ItemDatabase : MonoBehaviour
 
     public bool Load(string path = "", string fileName = "")
     {
+        if (currentDatabase != null)
+        {
+            currentDatabase.SaveFileName = fileName;
+        }
+        
         if (string.IsNullOrEmpty(path) && string.IsNullOrEmpty(fileName))
         {
-            path = Path.Combine(Application.persistentDataPath, saveFileName);
+            path = Path.Combine(Application.persistentDataPath, currentDatabase.SaveFileName);
         }
         else
         {
@@ -78,7 +110,8 @@ public class ItemDatabase : MonoBehaviour
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
             var json = File.ReadAllText(path);
-            items = JsonConvert.DeserializeObject<List<Item>>(json, jsonSettings);
+            currentDatabase = JsonConvert.DeserializeObject<ItemDatabaseContainer>(json, jsonSettings);
+            
             return true;
         }
         catch (System.Exception e)
@@ -94,7 +127,7 @@ public class ItemDatabase : MonoBehaviour
             using var webClient = new WebClient();
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
             var json = webClient.DownloadString(url);
-            items = JsonConvert.DeserializeObject<List<Item>>(json, jsonSettings);
+            currentDatabase = JsonConvert.DeserializeObject<ItemDatabaseContainer>(json, jsonSettings);
             PopupDisplayUI.instance.ShowPopup("Loaded Item Database from Server!", PopupDisplayUI.PopupPosition.Middle, () => { });
         }
         catch (WebException ex)

@@ -24,7 +24,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
     private GameObject loadCharactersContent, characterNoteContent, characterNotePrefab;
 
     [SerializeField]
-    private TMP_Text playerNameText, characterNameText,combatLevelText,healthText, meleeLevelText,rangeLevelText,magicLevelText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText,weaponText,shieldText,headText,bodyText,legsText,feetText, goldText;
+    private TMP_Text playerNameText, characterNameText,combatLevelText,combatHealthText,healthText, meleeLevelText,rangeLevelText,magicLevelText,meleeAttackText,meleeDefenseText,rangeAttackText,rangeDefenseText,magicAttackText,magicDefenseText,critChanceText,weaponText,shieldText,headText,bodyText,legsText,feetText, goldText;
 
     [SerializeField]
     private TMP_InputField levelAmountInput, goldAmountInput, healthAmountInput, saveFileNameInput, diceSideAmountInput, diceAmountInput, noteInput;
@@ -47,6 +47,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
     public TMP_Text CharacterNameText { get => characterNameText; set => characterNameText = value; }
     public TMP_Text CombatLevelText { get => combatLevelText; set => combatLevelText = value; }
     public TMP_Text HealthText { get => healthText; set => healthText = value; }
+    public TMP_Text CombatHealthText { get => combatHealthText; set => combatHealthText = value; }
     public TMP_Text MeleeLevelText { get => meleeLevelText; set => meleeLevelText = value; }
     public TMP_Text RangeLevelText { get => rangeLevelText; set => rangeLevelText = value; }
     public TMP_Text MagicLevelText { get => magicLevelText; set => magicLevelText = value; }
@@ -103,7 +104,7 @@ public class PlayerCharacterMenuController : MonoBehaviour
         magicAttackText.text = $"Magic Attack: {player.Stats.MagicAttack.MaxValue}";
         magicDefenseText.text = $"Magic Defense: {player.Stats.MagicDefense.MaxValue}";
         critChanceText.text = $"Crit Chance: {player.Stats.CritChance.MaxValue}";
-
+        combatHealthText.text = $"Health: {player.Stats.Health.CurrentValue}/{player.Stats.Health.MaxValue}";
         goldText.text = $"Gold: {player.Inventory.Gold}";
 
         weaponText.text = (player.Equipment[0] != null) ? $"Weapon: {player.Equipment[0].ItemName}" : "Weapon: None";
@@ -147,13 +148,13 @@ public class PlayerCharacterMenuController : MonoBehaviour
     public void AddItem()
     {
         ClearItemsContent();
-        for (int i = 0; i < ItemDatabase.instance.Items.Count; i++)
+        for (int i = 0; i < ItemDatabase.instance.CurrentDatabase.Items.Count; i++)
         {
             var button = Instantiate(addItemButtonPrefab, characterItemsContent.transform);
             var itemBtnScript = button.GetComponent<CharacterItemButton>();
             if(itemBtnScript != null)
             {
-                itemBtnScript.SelectedItemSlot = new InventorySlot { Item = ItemDatabase.instance.Items[i], Amount = 1 };
+                itemBtnScript.SelectedItemSlot = new InventorySlot { Item = ItemDatabase.instance.CurrentDatabase.Items[i], Amount = 1 };
             }
         }
     }
