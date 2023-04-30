@@ -16897,7 +16897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8233269475285043439, guid: 7a8a173a240275e4c91eb0d28cec95c7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
-      value: https://raw.githubusercontent.com/Monydragon/PQ-TTRPG/main/Assets/_App/Items/ItemDb.json
+      value: https://raw.githubusercontent.com/Monydragon/PQ-TTRPG/main/Assets/_App/Resources/Items/ItemDb.json
       objectReference: {fileID: 0}
     - target: {fileID: 8233269475285043439, guid: 7a8a173a240275e4c91eb0d28cec95c7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

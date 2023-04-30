@@ -82,7 +82,8 @@ public class ItemDatabase : MonoBehaviour
 #if UNITY_EDITOR
         var path = Path.Combine("Assets", "_App", "Resources", "Items");
         var filename = currentDatabase.SaveFileName;
-        File.WriteAllText(Path.Combine(path,filename),JsonConvert.SerializeObject(currentDatabase, Formatting.Indented));
+        var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+        File.WriteAllText(Path.Combine(path,filename),JsonConvert.SerializeObject(currentDatabase, Formatting.Indented, jsonSettings));
         AssetDatabase.Refresh();
 #endif
     }
