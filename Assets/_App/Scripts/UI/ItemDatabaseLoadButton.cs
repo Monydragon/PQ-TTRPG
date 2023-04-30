@@ -8,56 +8,48 @@ using UnityEngine.TextCore.Text;
 public class ItemDatabaseLoadButton : MonoBehaviour
 {
     [SerializeField]
-    private string fileName;
-    [SerializeField]
-    private int count;
+    private ItemDatabaseContainer databaseContainer;
 
-    [SerializeField]
+    [SerializeField] 
     private TMP_Text fileNameText, countText;
-
-    [SerializeField]
-    private ItemDatabase database;
-
-    public string FileName { get => fileName; set => fileName = value; }
-    public int Count { get => count; set => count = value; }
-
+    
+    public ItemDatabaseContainer DatabaseContainer { get => databaseContainer; set => databaseContainer = value;}    
     public TMP_Text FileNameText { get => fileNameText; set => fileNameText = value; }
     public TMP_Text CountText { get => countText; set => countText = value; }
-    public ItemDatabase Database { get => database; set => database = value; }
 
     // Update is called once per frame
     private void Update()
     {
-        if(database != null)
+        if (databaseContainer != null)
         {
-            fileNameText.text = $"Filename: {fileName}";
-            countText.text = $"Database Items Count: {count}";
+            fileNameText.text = $"Filename: {databaseContainer.SaveFileName}";
+            countText.text = $"Database Items Count: {databaseContainer.Items.Count}";
         }
     }
 
     public void LoadDatabase()
     {
-        if(database != null)
+        if(databaseContainer != null)
         {
-            PopupDisplayUI.instance.ShowPopup($"Loaded Database: {fileName}", PopupDisplayUI.PopupPosition.Middle, 
+            PopupDisplayUI.instance.ShowPopup($"Loaded Database: {databaseContainer.SaveFileName}", PopupDisplayUI.PopupPosition.Middle, 
                 () => 
                 {
-                    ItemDatabase.instance.Load(Application.persistentDataPath, fileName); 
+                    ItemDatabase.instance.Load(Application.persistentDataPath, databaseContainer.SaveFileName); 
                 });
         }
     }
 
     public void DeleteDatabase()
     {
-        if(database != null)
+        if(databaseContainer != null)
         {
             try
             {
-                PopupDisplayUI.instance.ShowPopup($"Confirm Delete Database: {fileName}?", PopupDisplayUI.PopupPosition.Middle,
+                PopupDisplayUI.instance.ShowPopup($"Confirm Delete Database: {databaseContainer.SaveFileName}?", PopupDisplayUI.PopupPosition.Middle,
                     () => {
-                        if (!string.IsNullOrWhiteSpace(fileName))
+                        if (!string.IsNullOrWhiteSpace(databaseContainer.SaveFileName))
                         {
-                            var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+                            var fullPath = Path.Combine(Application.persistentDataPath, databaseContainer.SaveFileName);
                             File.Delete(fullPath);
                             if (MainMenuUIController.instance != null)
                             {
@@ -68,7 +60,7 @@ public class ItemDatabaseLoadButton : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Failed To delete {fileName}\n {e.Message}");
+                Debug.LogError($"Failed To delete {databaseContainer.SaveFileName}\n {e.Message}");
             }
         }
     }

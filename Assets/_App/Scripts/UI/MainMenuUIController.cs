@@ -223,14 +223,11 @@ public class MainMenuUIController : MonoBehaviour
             string[] filePaths = Directory.GetFiles($"{Application.persistentDataPath}", "*.json");
             for (int i = 0; i < filePaths.Length; i++)
             {
-                string path = filePaths[i];
-                var filename = Path.GetFileName(path);
                 var button = Instantiate(itemDatabaseButtonPrefab, loadItemDatabaseContent.transform);
                 var loadButton = button.GetComponent<ItemDatabaseLoadButton>();
-                loadButton.Database = ItemDatabase.instance;
-                loadButton.Database.Load(path, filename);
-                loadButton.FileName = filename;
-                loadButton.Count = loadButton.Database.CurrentDatabase.Items.Count;
+                var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                var json = File.ReadAllText(filePaths[i]);
+                loadButton.DatabaseContainer = JsonConvert.DeserializeObject<ItemDatabaseContainer>(json, jsonSettings);
             }
         }
         catch (Exception e)
